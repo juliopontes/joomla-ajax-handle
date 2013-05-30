@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.1" type="plugin" group="system" method="upgrade">
+	<name>plg_system_ajax</name>
+	<author>Julio Pontes</author>
+	<creationDate>May 22, 2013</creationDate>
+	<copyright>Copyright (C) 2005 - 2013 Open Source Matters. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail></authorEmail>
+	<authorUrl>www.joomla.org</authorUrl>
+	<version>3.1</version>
+	<description>PLG_AJAX_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="ajax">ajax.php</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">en-GB.plg_system_ajax.ini</language>
+		<language tag="en-GB">en-GB.plg_system_ajax.sys.ini</language>
+	</languages>
+	<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field type="list" name="ajax_mode" default="option" label="PLG_AJAX_FIELD_LABEL_AJAX_MODE" description="PLG_AJAX_FIELD_LABEL_AJAX_MODE_DESC">
+					<option value="variable">PLG_AJAX_OPTION_REQUEST_VARIABLE</option>
+					<option value="option">PLG_AJAX_OPTION_REQUEST_FAKE_COMPONENT</option>
+					<option value="request_with">PLG_AJAX_OPTION_REQUEST_WITH</option>
+			</field>
+			<field type="text" name="custom_request_variable" label="PLG_AJAX_FIELD_LABEL_VARIABLE" description="PLG_AJAX_FIELD_LABEL_VARIABLE_DESC" />
+		</fieldset>
+	</fields>
+	</config>
+</extension>
