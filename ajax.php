@@ -60,49 +60,88 @@ class PlgSystemAjax extends JPlugin
 	 */
 	private function doAjax()
 	{
+		JFactory::getLanguage()->load('plg_system_ajax');
 		$request_format = $this->input->getCmd('format','raw');
 		
 		$module = $this->input->getCmd('module');
 		$plugin = $this->input->getCmd('plugin');
-		
-		if ($module) {
-			$client = $this->input->getCmd('client','site');
-			$module = $this->input->getCmd('module');
-			$helper = $this->input->getCmd('helper', 'helper');
-			$class 	= $this->input->getCmd('class', 'mod' . ucfirst($module) . 'Helper');
-			$method = $this->input->getCmd('method', 'getAjax');
-			
-			$client = JApplicationHelper::getClientInfo($client);
-			
-			$helper_path = $client->path . '/modules/mod_' . $module . '/' . $helper . '.php';
-			if (JFile::exists($helper_path)) {
-				require_once $helper_path;
-				$results = $class::$method($params);
+		$component = $this->input->getCmd('component');
+
+		$ajax_checktoken = $this->params->get('ajax_checktoken');
+
+		$enable_sufix = $this->params->get('ajax_use_prefix_token', false);
+		$ajax_prefix = '';
+		if ($enable_sufix == true) {
+			$ajax_prefix = $this->params->get('ajax_prefix');
+		}
+
+		if ($ajax_checktoken) {
+			if (!JSession::checkToken($this->params->get('ajax_jform_token_method','post'))) {
+				$results = array(JText::_('JINVALID_TOKEN'));
+			}	
+		}
+
+		$enable_acl = $this->params->get('verify_acl_request');
+		if ($enable_acl) {
+			$user = JFactory::getUser();
+
+			$authorisedViewLevel = array_intersect($this->params->get('access'),$user->getAuthorisedViewLevels());
+			$authorisedGroup = array_intersect($this->params->get('usergroup'),$user->getAuthorisedGroups());
+
+			if (count($authorisedViewLevel) && count($authorisedGroup)) {
+				$results = array(JText::_('PLG_AJAX_USER_DONT_HAVE_ACL_PERMISSION'));
+			}
+		}
+
+		if (empty($results) || !isset($results)) {
+			if ($module) {
+				$client = $this->input->getCmd('client','site');
+				$module = $this->input->getCmd('module');
+				$helper = $this->input->getCmd('helper', 'helper');
+				$class 	= $this->input->getCmd('class', 'mod' . ucfirst($module) . 'Helper');
+				$method = $this->input->getCmd('method', 'getAjax');
+				
+				$client = JApplicationHelper::getClientInfo($client);
+				
+				$helper_path = $client->path . '/modules/mod_' . $module . '/' . $helper . '.php';
+				if (JFile::exists($helper_path)) {
+					require_once $helper_path;
+					$results = $class::$method($params);
+				} else {
+					$results = array();
+				}
+			} else if ($plugin) {
+				JPluginHelper::importPlugin('ajax');
+				$plugin = ucfirst($plugin);
+				$results = $this->dispatcher->trigger('onAjax' . $plugin);
+			} else if ($component) {
+				$client = $this->input->getCmd('client','site');
+				$client = JApplicationHelper::getClientInfo($client);
+				
+				JControllerLegacy::getInstance($controller_base,array('base_path' => $client->path.'/components'))->execute();
+				$this->app->getSystemMessages();
+				
+				
 			} else {
 				$results = array();
 			}
-		} else if ($plugin) {
-			JPluginHelper::importPlugin('ajax');
-			$plugin = ucfirst($plugin);
-			$results = $this->dispatcher->trigger('onAjax' . $plugin);
-		} else {
-			$results = array();
 		}
 
 		// Return the results from this plugin group in the desired format
 		switch ($request_format) {
 			case 'jsonp':
 				$cb = $this->input->get('callback','callbackResponse');
-				echo $cb.'('.json_encode($results).')';
+				$response = $cb.'('.$ajax_prefix.json_encode($results).$ajax_prefix.')';
 				break;
 			case 'json':
-				echo json_encode($results);
+				$response = $ajax_prefix.json_encode($results).$ajax_prefix;
 			break;
 			case 'raw':
 			default:
-				echo implode($results);
+				$response = $ajax_prefix.implode($results).$ajax_prefix;
 			break;
 		}
+		echo $response;
 		$this->app->close();
 	}
 }
