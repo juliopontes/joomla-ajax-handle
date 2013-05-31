@@ -11,6 +11,15 @@ You have 3 ways to handle ajax using this plugin
 * Fake component call. e.g.: option=com_ajax (default value)
 * Checking Request Header e.g.: X-Requested-With: XMLHttpRequest (this probably will catch all ajax requests, but remember that requester can change value from X-Requested-With to other value and will not be catch by plugin)
 
+Changelog
+==============
+3.1.1
++ ACL access level and usergroup
++ JForm token check
++ Ajax prefix/sufix response
++ Component call
+
+
 Contributing
 ====================
 Your contributions are more than welcome!
