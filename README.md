@@ -11,8 +11,10 @@ Choose how you want to handle ajax requests
   * Ajax events are triggered by submitting a request to `index.php?ajax=1`
   * Variable 'ajax' is customisable
 * Fake component call
-  * Ajax events are triggered by submitting a request to `index.php?option=com_ajax`
-  * Component 'com_ajax' is customisable 
+  * Ajax events are triggered by submitting a request to `index.php?component=com_ajax`
+  * Component 'com_ajax' is customisable
+  * Example content voting request: `index.php?component=com_ajax&option=com_content&task=article.vote&user_rating=2&id=1&view=article&url=index.php`
+  * Ps.: you need to send jform token by post
 * Checking Request Header
   *  X-Requested-With: XMLHttpRequest (this probably will catch all ajax requests, but remember that requester can change value from X-Requested-With to other value and will not be catch by plugin)
 
