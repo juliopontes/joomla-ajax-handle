@@ -30,13 +30,18 @@ Aditional Options
 
 Changelog
 ==============
+3.1.2
+* - ACL access level and usergroup
+* - JForm token check
+* + Component call reuse
+
 3.1.1
-* ACL access level and usergroup
-* JForm token check
-* Ajax prefix/sufix response
-* Component call
-* Module hellper call
-* Ajax plugin support
+* + ACL access level and usergroup
+* + JForm token check
+* + Ajax prefix/sufix response
+* + Component call
+* + Module hellper call
+* + Ajax plugin support
 
 Contributing
 ====================
