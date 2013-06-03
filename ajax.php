@@ -42,7 +42,7 @@ class PlgSystemAjax extends JPlugin
 				break;
 			case 'option':
 				// check option request
-				if ($this->input->getCmd('option') == $this->params->get('custom_request_variable','com_ajax')) {
+				if ($this->input->getCmd('component') == $this->params->get('custom_request_variable','com_ajax')) {
 					$this->doAjax();
 				}
 				break;
@@ -52,6 +52,10 @@ class PlgSystemAjax extends JPlugin
 					$this->doAjax();
 				}
 				break;
+		}
+		
+		if (JFactory::getSession()->get('ajax', false)) {
+			$this->doAjax();
 		}
 	}
 
@@ -65,7 +69,7 @@ class PlgSystemAjax extends JPlugin
 		
 		$module = $this->input->getCmd('module');
 		$plugin = $this->input->getCmd('plugin');
-		$component = $this->input->getCmd('component');
+		$component = $this->input->getCmd('option');
 
 		$ajax_checktoken = $this->params->get('ajax_checktoken');
 
@@ -74,23 +78,24 @@ class PlgSystemAjax extends JPlugin
 		if ($enable_sufix == true) {
 			$ajax_prefix = $this->params->get('ajax_prefix');
 		}
-
-		if ($ajax_checktoken) {
-			if (!JSession::checkToken($this->params->get('ajax_jform_token_method','post'))) {
-				$results = array(JText::_('JINVALID_TOKEN'));
-			}	
-		}
-
-		$enable_acl = $this->params->get('verify_acl_request');
-		if ($enable_acl) {
-			$user = JFactory::getUser();
-
-			$authorisedViewLevel = array_intersect($this->params->get('access'),$user->getAuthorisedViewLevels());
-			$authorisedGroup = array_intersect($this->params->get('usergroup'),$user->getAuthorisedGroups());
-
-			if (count($authorisedViewLevel) && count($authorisedGroup)) {
-				$results = array(JText::_('PLG_AJAX_USER_DONT_HAVE_ACL_PERMISSION'));
+		
+		if (JFactory::getSession()->get('ajax', false)) {
+			$messages = $this->app->getMessageQueue();
+			// Build the sorted message list
+			if (is_array($messages) && !empty($messages))
+			{
+				foreach ($messages as $msg)
+				{
+					if (isset($msg['type']) && isset($msg['message']))
+					{
+						$results[] = $msg['message'];
+					}
+				}
+			} else {
+				$results = array();
 			}
+			
+			JFactory::getSession()->set('ajax', false);
 		}
 
 		if (empty($results) || !isset($results)) {
@@ -115,13 +120,8 @@ class PlgSystemAjax extends JPlugin
 				$plugin = ucfirst($plugin);
 				$results = $this->dispatcher->trigger('onAjax' . $plugin);
 			} else if ($component) {
-				$client = $this->input->getCmd('client','site');
-				$client = JApplicationHelper::getClientInfo($client);
-				
-				JControllerLegacy::getInstance($controller_base,array('base_path' => $client->path.'/components'))->execute();
-				$this->app->getSystemMessages();
-				
-				
+				JFactory::getSession()->set('ajax', true);
+				$this->app->dispatch();
 			} else {
 				$results = array();
 			}
