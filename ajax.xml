@@ -7,7 +7,7 @@
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail></authorEmail>
 	<authorUrl>www.joomla.org</authorUrl>
-	<version>3.1.1</version>
+	<version>3.1.2</version>
 	<description>PLG_AJAX_XML_DESCRIPTION</description>
 	<files>
 		<filename plugin="ajax">ajax.php</filename>
@@ -25,25 +25,11 @@
 					<option value="request_with">PLG_AJAX_OPTION_REQUEST_WITH</option>
 			</field>
 			<field type="text" name="custom_request_variable" label="PLG_AJAX_FIELD_LABEL_VARIABLE" description="PLG_AJAX_FIELD_LABEL_VARIABLE_DESC" />
-			<field name="ajax_checktoken" type="radio" class="btn-group" default="0" label="PLG_AJAX_FIELD_LABEL_CHECK_TOKEN" description="PLG_AJAX_FIELD_LABEL_CHECK_TOKEN_DESC">
-					<option value="0">JNO</option>
-					<option value="1">JYES</option>
-			</field>
-			<field type="list" name="ajax_jform_token_method" default="post" label="PLG_AJAX_FIELD_LABEL_JFORM_TOKEN_METHOD" description="PLG_AJAX_FIELD_LABEL_JFORM_TOKEN_METHOD_DESCRIPTION">
-				<option value="post">POST</option>
-				<option value="get">GET</option>
-			</field>
 			<field name="ajax_use_prefix_token" type="radio" class="btn-group" default="0" label="PLG_AJAX_FIELD_LABEL_USE_PREFIX_TOKEN" description="PLG_AJAX_FIELD_LABEL_USE_PREFIX_TOKEN_DESC">
 					<option value="0">JNO</option>
 					<option value="1">JYES</option>
 			</field>
 			<field type="text" name="ajax_prefix" label="PLG_AJAX_FIELD_LABEL_PREFIX" default="###" description="PLG_AJAX_FIELD_LABEL_PREFIX_DESC" />
-			<field name="verify_acl_request" type="radio" class="btn-group" default="0" label="PLG_AJAX_FIELD_LABEL_ACL_REQUEST" description="PLG_AJAX_FIELD_LABEL_ACL_REQUEST_DESC">
-					<option value="0">JNO</option>
-					<option value="1">JYES</option>
-				</field>
-			<field type="accesslevel" name="access" multiple="true" size="3" label="PLG_AJAX_FIELD_LABEL_ACL_ACCESS_LEVEL" description="PLG_AJAX_FIELD_LABEL_ACL_ACCESS_LEVEL_DESC"></field>
-			<field type="usergroup" name="usergorup" multiple="true" size="5" label="PLG_AJAX_FIELD_LABEL_ACL_USERGROUP" description="PLG_AJAX_FIELD_LABEL_ACL_USERGROUP_DESC"></field>
 		</fieldset>
 	</fields>
 	</config>
